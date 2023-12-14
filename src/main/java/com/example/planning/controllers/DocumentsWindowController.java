@@ -10,8 +10,12 @@ import java.util.ResourceBundle;
 import com.example.planning.DBHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
 
 public class DocumentsWindowController {
@@ -23,10 +27,16 @@ public class DocumentsWindowController {
     private URL location;
 
     @FXML
+    private FlowPane btnDocField;
+
+    @FXML
     private Button createBtnDocWindow;
 
     @FXML
     private Button deleteBtnDocWindow;
+
+    @FXML
+    private AnchorPane docField;
 
     @FXML
     private Button updateBtnDocWindow;
@@ -36,7 +46,16 @@ public class DocumentsWindowController {
         try {
             DBHandler dbHandler = new DBHandler();
             //Добавляем из хэндлера массив с наименованиями листов для создания кнопок
-            ArrayList<String> listOfBtn = dbHandler.listOfPagesName;
+            ArrayList<String> listOfBtn = dbHandler.listOfNames;
+            btnDocField.setHgap(50);
+            btnDocField.setVgap(20);
+            for (String i : listOfBtn) {
+                Button nameDocBtn = new Button(i);
+                nameDocBtn.setPrefSize(100, 50);
+
+                btnDocField.getChildren().add(nameDocBtn);
+            }
+
 
         } catch (IOException e) {
             System.out.println("File is not ready");
@@ -55,8 +74,11 @@ public class DocumentsWindowController {
            } catch (IOException e) {
                e.printStackTrace();
            }
+           Stage currentStage = (Stage) createBtnDocWindow.getScene().getWindow();
+           currentStage.close();
        });
 
     }
+
 
 }

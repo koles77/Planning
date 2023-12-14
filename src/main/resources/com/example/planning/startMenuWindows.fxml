@@ -33,14 +33,12 @@
 -->
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
 <VBox prefHeight="250.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.planning.controllers.StartMenuController">
   <children>
@@ -85,11 +83,6 @@
     </MenuBar>
     <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="205.0" prefWidth="504.0" VBox.vgrow="ALWAYS">
       <children>
-        <Label alignment="CENTER" layoutX="155.0" layoutY="177.0" style="&#10;" text="Drag components from Library here…" textAlignment="CENTER" textFill="#9f9f9f" wrapText="false">
-          <font>
-            <Font size="18.0" />
-          </font>
-        </Label>
             <Button fx:id="documentsButton" layoutX="14.0" layoutY="49.0" mnemonicParsing="false" prefHeight="105.0" prefWidth="129.0" text="Documents" />
             <Button fx:id="getReportButton" layoutX="185.0" layoutY="49.0" mnemonicParsing="false" prefHeight="105.0" prefWidth="129.0" text="Get Report" />
             <Button fx:id="controlButton" layoutX="361.0" layoutY="49.0" mnemonicParsing="false" prefHeight="105.0" prefWidth="129.0" text="Control" />

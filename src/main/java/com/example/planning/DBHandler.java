@@ -1,28 +1,54 @@
 package com.example.planning;
 
+import org.apache.poi.EmptyFileException;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Workbook;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 
 public class DBHandler {
-   File file = new File("src\\main\\resources\\DB\\documents.xls");
-   FileInputStream inpStreamFile = new FileInputStream(file);
-   Workbook wb = new HSSFWorkbook(inpStreamFile);
-   public ArrayList<String> listOfPagesName = new ArrayList<>();
-
-
+    File file = new File("src\\main\\resources\\DB\\documents.xls");
+    String path = "src\\main\\resources\\DB\\documents.xls";
+    public ArrayList<String> listOfNames = new ArrayList<>();
     public DBHandler() throws IOException {
-       if (file.exists()) {
-          System.out.println("File is ready! Quantity of sheets is:" + wb.getNumberOfSheets());
-          for (int i = 0; i < wb.getNumberOfSheets(); i++) {
-             listOfPagesName.add(wb.getSheetName(i));
-             System.out.println(wb.getSheetName(i));
+
+        if (!file.exists()) {
+            System.out.println("file is not available");
           }
-       }
+
+        else {
+            FileInputStream forMainDB = new FileInputStream(file);
+            HSSFWorkbook wb = new HSSFWorkbook(forMainDB, true);
+            System.out.println("File is ready! Quantity of sheets is:" + wb.getNumberOfSheets());
+            ArrayList<String> listOfPagesName = new ArrayList<>();
+            for (int i = 0; i < wb.getNumberOfSheets(); i++) {
+                listOfPagesName.add(wb.getSheetName(i));
+                System.out.println(wb.getSheetName(i));
+            }
+            listOfNames = listOfPagesName;
+            wb.close();
+            forMainDB.close();
+        }
     }
+
+    public void addDocToMainDB(String docsName) throws IOException {
+       try {
+             FileInputStream fis = new FileInputStream(file);
+             HSSFWorkbook tempWB = new HSSFWorkbook(fis, true);
+             fis.close();
+
+             tempWB.createSheet(docsName);
+             tempWB.getSheet(docsName).createRow(0).createCell(0).setCellValue(docsName);
+
+             FileOutputStream fos = new FileOutputStream(path);
+             tempWB.write(fos);
+             fos.close();
+       }
+       catch (EmptyFileException e) {
+          System.out.println("File is empty");
+       }
+
+    }
+
+
+
 }
