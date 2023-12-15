@@ -3,6 +3,8 @@ package com.example.planning.controllers;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import com.example.planning.ActionWithWindow;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -33,17 +35,8 @@ public class StartMenuController {
             mainWindow.close();
 
         // Запускается окно всех имеющихся документов
-            Stage docsStage = new Stage();
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation((getClass().getResource("/com/example/planning/documentsWindow.fxml")));
-            try {
-                Scene docsScene = new Scene(loader.load(), 500, 500);
-                docsStage.setTitle("Documents");
-                docsStage.setScene(docsScene);
-                docsStage.show();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            ActionWithWindow action = new ActionWithWindow();
+            action.toShow("/com/example/planning/documentsWindow.fxml", "Documents", 500, 500);
 
         });
 

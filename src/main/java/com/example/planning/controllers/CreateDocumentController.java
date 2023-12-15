@@ -57,12 +57,12 @@ public class CreateDocumentController {
         DBHandler handler = new DBHandler();
         okBtnCreateDocWindow.setOnAction(actionEvent -> {
             try {
-                handler.addDocToMainDB(nameDocumentField.getText());
+                handler.addDocToMainDB(nameDocumentField.getText(), numberDocumentField.getText());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
 
-            Stage addDoc =(Stage) okBtnCreateDocWindow.getScene().getWindow();
+            Stage addDoc = (Stage) okBtnCreateDocWindow.getScene().getWindow();
             addDoc.close();
 
             ActionWithWindow rwin = new ActionWithWindow();

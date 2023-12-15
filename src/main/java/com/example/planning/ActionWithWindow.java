@@ -23,4 +23,18 @@ public class ActionWithWindow {
         }
     }
 
+    public void toShow (String pathToFxml, String titleName, int width, int height) {
+        Stage createDocStage = new Stage();
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation((getClass().getResource(pathToFxml)));
+        try {
+            Scene docsScene = new Scene(loader.load(), width, height);
+            createDocStage.setTitle(titleName);
+            createDocStage.setScene(docsScene);
+            createDocStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

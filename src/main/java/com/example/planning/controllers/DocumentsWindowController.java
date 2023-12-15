@@ -7,6 +7,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import com.example.planning.ActionWithWindow;
 import com.example.planning.DBHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,6 +18,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
+import org.w3c.dom.events.Event;
 
 public class DocumentsWindowController {
 
@@ -52,30 +54,24 @@ public class DocumentsWindowController {
             for (String i : listOfBtn) {
                 Button nameDocBtn = new Button(i);
                 nameDocBtn.setPrefSize(100, 50);
-
                 btnDocField.getChildren().add(nameDocBtn);
+                nameDocBtn.setOnMouseClicked(mouseEvent -> {
+                    ActionWithWindow action = new ActionWithWindow();
+                    action.toShow("/com/example/planning/addItemInDocumentWindow.fxml", "Add Items", 500, 600);
+                    Stage currentStage = (Stage) nameDocBtn.getScene().getWindow();
+                    currentStage.close();
+                });
+
             }
-
-
         } catch (IOException e) {
             System.out.println("File is not ready");
         }
 
         createBtnDocWindow.setOnMouseClicked(mouseEvent -> {
-
-           Stage createDocStage = new Stage();
-           FXMLLoader loader = new FXMLLoader();
-           loader.setLocation((getClass().getResource("/com/example/planning/createDocumentWindow.fxml")));
-           try {
-               Scene docsScene = new Scene(loader.load(), 500, 500);
-               createDocStage.setTitle("Create document");
-               createDocStage.setScene(docsScene);
-               createDocStage.show();
-           } catch (IOException e) {
-               e.printStackTrace();
-           }
-           Stage currentStage = (Stage) createBtnDocWindow.getScene().getWindow();
-           currentStage.close();
+            ActionWithWindow action = new ActionWithWindow();
+            action.toShow("/com/example/planning/createDocumentWindow.fxml", "Create document", 500, 500);
+            Stage currentStage = (Stage) createBtnDocWindow.getScene().getWindow();
+            currentStage.close();
        });
 
     }

@@ -30,7 +30,7 @@ public class DBHandler {
         }
     }
 
-    public void addDocToMainDB(String docsName) throws IOException {
+    public void addDocToMainDB(String docsName, String docsRegNum) throws IOException {
        try {
              FileInputStream fis = new FileInputStream(file);
              HSSFWorkbook tempWB = new HSSFWorkbook(fis, true);
@@ -38,7 +38,7 @@ public class DBHandler {
 
              tempWB.createSheet(docsName);
              tempWB.getSheet(docsName).createRow(0).createCell(0).setCellValue(docsName);
-
+             tempWB.getSheet(docsName).createRow(1).createCell(0).setCellValue(docsRegNum);
              FileOutputStream fos = new FileOutputStream(path);
              tempWB.write(fos);
              fos.close();
