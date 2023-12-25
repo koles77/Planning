@@ -1,7 +1,15 @@
 package com.example.planning.controllers;
 
+import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
+
+import com.example.planning.ActionWithWindow;
+import com.example.planning.DBHandler;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableArray;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -55,7 +63,7 @@ public class AddItemInDocumentController {
     private Label kindOfActItemLabel;
 
     @FXML
-    private ComboBox<?> kindOfActItemsCombobox;
+    private ComboBox<String> kindOfActItemsCombobox;
 
     @FXML
     private ComboBox<?> mainPersonsCombobox;
@@ -78,7 +86,14 @@ public class AddItemInDocumentController {
     @FXML
     private CheckBox savePatternCheckBox;
     @FXML
-    void initialize() {
+    void initialize() throws IOException {
+        DBHandler dbh = new DBHandler();
+
+        ArrayList<String> kindOfActArray = dbh.getGuideInfo();
+        for (String a : kindOfActArray) {
+            kindOfActItemsCombobox.getItems().add(a);
+        }
+
 
     }
 

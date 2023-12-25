@@ -1,7 +1,10 @@
 package com.example.planning;
 
 import org.apache.poi.EmptyFileException;
+import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.CellType;
+
 import java.io.*;
 import java.util.ArrayList;
 
@@ -47,6 +50,28 @@ public class DBHandler {
           System.out.println("File is empty");
        }
 
+    }
+
+    public ArrayList<String> getGuideInfo() throws IOException {
+        ArrayList<String> kindOfActList = new ArrayList<>();
+        FileInputStream getGuideFIS = new FileInputStream(file);
+        HSSFWorkbook getGuideWB = new HSSFWorkbook(getGuideFIS);
+
+        int i = 2;
+        try {
+            while (getGuideWB.getSheetAt(0).getRow(i).getCell(1).getCellType() != CellType._NONE) {
+                //System.out.println(getGuideWB.getSheetAt(0).getRow(i).getCell(1).getCellType());
+                // Тест на STRING
+                kindOfActList.add(getGuideWB.getSheetAt(0).getRow(i).getCell(1).getStringCellValue());
+                System.out.println(getGuideWB.getSheetAt(0).getRow(i).getCell(1).getStringCellValue() + " getGuideInfo");
+                i++;
+            }
+        }
+        catch (NullPointerException e) {
+            System.out.println("Исключение");
+        }
+
+    return  kindOfActList;
     }
 
 
