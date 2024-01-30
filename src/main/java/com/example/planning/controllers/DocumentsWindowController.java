@@ -45,6 +45,7 @@ public class DocumentsWindowController {
 
     @FXML
     void initialize()  {
+
         try {
             DBHandler dbHandler = new DBHandler();
             //Добавляем из хэндлера массив с наименованиями листов для создания кнопок
@@ -56,8 +57,9 @@ public class DocumentsWindowController {
                 nameDocBtn.setPrefSize(100, 50);
                 btnDocField.getChildren().add(nameDocBtn);
                 nameDocBtn.setOnMouseClicked(mouseEvent -> {
+                    AddItemInDocumentController.nameOfDoc = nameDocBtn.getText();
                     ActionWithWindow action = new ActionWithWindow();
-                    action.toShow("/com/example/planning/addItemInDocumentWindow.fxml", "Add Items", 500, 600);
+                    action.toShow("/com/example/planning/addItemInDocumentWindow.fxml", nameDocBtn.getText(), 500, 600);
                     Stage currentStage = (Stage) nameDocBtn.getScene().getWindow();
                     currentStage.close();
                 });

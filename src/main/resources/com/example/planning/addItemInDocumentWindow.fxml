@@ -88,8 +88,8 @@
     </MenuBar>
     <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="564.0" prefWidth="500.0" VBox.vgrow="ALWAYS">
       <children>
-            <Label fx:id="currentDocNameLabel" layoutX="14.0" layoutY="14.0" prefHeight="35.0" prefWidth="473.0" text="Название документа" textAlignment="CENTER" />
-            <Button fx:id="okBtnCreateDocWindow" layoutX="181.0" layoutY="506.0" mnemonicParsing="false" text="Ok" />
+            <Label fx:id="currentDocNameLabel" layoutX="14.0" layoutY="14.0" prefHeight="35.0" prefWidth="122.0" text="Название документа" textAlignment="CENTER" />
+            <Button fx:id="okBtnItemInDocWindow" layoutX="181.0" layoutY="506.0" mnemonicParsing="false" text="Ok" />
             <Button fx:id="cancelBtnCreateDocWindow" layoutX="231.0" layoutY="506.0" mnemonicParsing="false" text="Cancel" />
             <TextField fx:id="numberDocumentField" layoutX="114.0" layoutY="87.0" prefHeight="26.0" prefWidth="142.0" promptText="№ пункта" />
             <Label fx:id="numberCurrentDocLabel" layoutX="14.0" layoutY="49.0" prefHeight="35.0" prefWidth="474.0" text="Номер документа" textAlignment="CENTER" />
@@ -100,8 +100,8 @@
                <children>
                   <Label fx:id="s" prefHeight="35.0" prefWidth="111.0" text="Ответственный:" textAlignment="CENTER" />
                   <ComboBox fx:id="mainPersonsCombobox" layoutX="130.0" layoutY="5.0" prefHeight="26.0" prefWidth="175.0" />
-                  <Label fx:id="ItemExecutorLabel" layoutY="35.0" prefHeight="35.0" prefWidth="111.0" text="Исполнитель:" textAlignment="CENTER" />
-                  <ComboBox fx:id="ItemExecutorsCombobox" layoutX="130.0" layoutY="40.0" prefHeight="26.0" prefWidth="175.0" />
+                  <Label fx:id="itemExecutorLabel" layoutY="35.0" prefHeight="35.0" prefWidth="111.0" text="Исполнитель:" textAlignment="CENTER" />
+                  <ComboBox fx:id="itemExecutorsCombobox" layoutX="130.0" layoutY="40.0" prefHeight="26.0" prefWidth="175.0" />
                   <Label fx:id="itemAssistantLabel" layoutY="70.0" prefHeight="35.0" prefWidth="111.0" text="Соисполнитель:" textAlignment="CENTER" />
                   <ComboBox fx:id="itemAssistantsCombobox" layoutX="130.0" layoutY="75.0" prefHeight="26.0" prefWidth="175.0" />
                   <Label fx:id="dueDateLabel" layoutY="105.0" prefHeight="35.0" prefWidth="111.0" text="Срок исполнения:" textAlignment="CENTER" />
@@ -110,16 +110,18 @@
             </AnchorPane>
             <AnchorPane layoutX="111.0" layoutY="457.0">
                <children>
-                  <CheckBox mnemonicParsing="false" text="Отдел" />
-                  <CheckBox layoutX="64.0" mnemonicParsing="false" text="1 отд" />
-                  <CheckBox layoutX="124.0" mnemonicParsing="false" text="2 отд" />
-                  <CheckBox layoutX="187.0" mnemonicParsing="false" text="3 отд" />
+                  <CheckBox fx:id="mainDivCheckBox" mnemonicParsing="false" text="Отдел" />
+                  <CheckBox fx:id="firstDivCheckBox" layoutX="64.0" mnemonicParsing="false" text="1 отд" />
+                  <CheckBox fx:id="secondDivCheckBox" layoutX="124.0" mnemonicParsing="false" text="2 отд" />
+                  <CheckBox fx:id="thirdDivCheckBox" layoutX="187.0" mnemonicParsing="false" text="3 отд" />
                </children>
             </AnchorPane>
             <Button fx:id="addItemToDocBtn" layoutX="14.0" layoutY="222.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="121.0" text="Add Item to doc" />
             <CheckBox fx:id="savePatternCheckBox" layoutX="141.0" layoutY="226.0" mnemonicParsing="false" text="Сохранить шаблон" />
             <Label fx:id="kindOfActItemLabel" layoutX="13.0" layoutY="257.0" prefHeight="35.0" prefWidth="111.0" text="Направление:" textAlignment="CENTER" />
             <ComboBox fx:id="kindOfActItemsCombobox" layoutX="143.0" layoutY="262.0" prefHeight="26.0" prefWidth="175.0" />
+            <TextField fx:id="nameOfDocumentTextField" layoutX="143.0" layoutY="18.0" prefHeight="26.0" prefWidth="342.0" promptText="Название" />
+            <TextField fx:id="numberOfDocumentTextField" layoutX="125.0" layoutY="53.0" prefHeight="26.0" prefWidth="360.0" promptText="№ документа" />
       </children>
     </AnchorPane>
   </children>
