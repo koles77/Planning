@@ -1,7 +1,11 @@
 package com.example.planning;
 
+import javafx.collections.ObservableList;
+import javafx.event.Event;
+import javafx.event.EventHandler;
+import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionMode;
 import org.apache.poi.EmptyFileException;
-import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -9,9 +13,8 @@ import org.apache.poi.ss.usermodel.CellType;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.LinkedHashSet;
 
 public class DBHandler {
 //    File file = new File("src\\main\\resources\\DB\\documents.xls");
@@ -91,6 +94,7 @@ public class DBHandler {
             arrayOfArray.put("kindOfActList", kindOfActList);
 //            System.out.println("Исключение ++");
         }
+
         int j = 3;
         try {
             while (!getGuideWB.getSheetAt(0).getRow(1).getCell(j).getStringCellValue().equals("Исполнитель")) {
@@ -111,11 +115,11 @@ public class DBHandler {
                 j += 2;
             }
             arrayOfArray.put("forTakeAChoiceList", forTakeAChoiceList);
-
         }
         catch (NullPointerException s) {
             System.out.println("ForTakeAchoiceList exception");
         }
+
         int z = 2;
         try {
             while (getGuideWB.getSheetAt(0).getRow(z).getCell(11).getCellType() == CellType.STRING) {
@@ -125,9 +129,8 @@ public class DBHandler {
         }
         catch (NullPointerException e) {
             arrayOfArray.put("forTakeAnExecutorList", forTakeAnExecutorList);
-//            for (String g : forTakeAnExecutorList) System.out.println(g);
-//            System.out.println("Исключение в исполнителях");
         }
+
         int f = 2;
         try {
             while (getGuideWB.getSheetAt(0).getRow(f).getCell(13).getCellType() == CellType.STRING) {
@@ -137,8 +140,6 @@ public class DBHandler {
         }
         catch (NullPointerException e) {
             arrayOfArray.put("forTakeAnCoExecutorList", forTakeAnCoExecutorList);
-//            for (String g : forTakeAnCoExecutorList) System.out.println(g);
-//            System.out.println("Исключение в соисполнителях");
         }
 
 
@@ -148,7 +149,7 @@ public class DBHandler {
     }
 
     public void addItemsInDoc (String sheetName, String numberOfItem, String nameOfDocument, String registrationNumer,
-                               String textOfItem, String kindOfAction, String mainPerson, String executor, String coexecutor) {
+                               String textOfItem, String kindOfAction, String responsible, String executor, String coexecutor) {
         //пишем метод для добавления пунктов в док
         int indexOfCurrentRow = getNumberOfcurrentRow(sheetName);
         try {
@@ -161,7 +162,7 @@ public class DBHandler {
             currentRow.createCell(2).setCellValue(registrationNumer.toString());
             currentRow.createCell(3).setCellValue(textOfItem.toString());
             currentRow.createCell(4).setCellValue(kindOfAction.toString());
-            currentRow.createCell(5).setCellValue(mainPerson.toString());
+            currentRow.createCell(5).setCellValue(responsible.toString());
             currentRow.createCell(6).setCellValue(executor.toString());
             currentRow.createCell(7).setCellValue(coexecutor.toString());
 

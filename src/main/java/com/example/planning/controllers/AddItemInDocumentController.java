@@ -2,26 +2,16 @@ package com.example.planning.controllers;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
-import com.example.planning.ActionWithWindow;
+
 import com.example.planning.DBHandler;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableArray;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import static org.apache.xmlbeans.XmlBeans.getTitle;
@@ -41,6 +31,9 @@ public class AddItemInDocumentController {
     private Button cancelBtnCreateDocWindow;
 
     @FXML
+    private ListView<String> coexecutorsListView;
+
+    @FXML
     private Label currentDocNameLabel;
 
     @FXML
@@ -50,16 +43,13 @@ public class AddItemInDocumentController {
     private DatePicker dueDatePicker;
 
     @FXML
+    protected ListView<String> executorsListView;
+
+    @FXML
     private Label itemAssistantLabel;
 
     @FXML
-    private ComboBox<String> itemAssistantsCombobox;
-
-    @FXML
     private Label itemExecutorLabel;
-
-    @FXML
-    private ComboBox<String> itemExecutorsCombobox;
 
     @FXML
     private TextField itemTextCurrentDocField;
@@ -71,10 +61,7 @@ public class AddItemInDocumentController {
     private Label kindOfActItemLabel;
 
     @FXML
-    private ComboBox<String> kindOfActItemsCombobox;
-
-    @FXML
-    private ComboBox<String> mainPersonsCombobox;
+    private CheckBox monthlyCheckBox;
 
     @FXML
     private TextField nameOfDocumentTextField;
@@ -95,73 +82,85 @@ public class AddItemInDocumentController {
     private Button okBtnItemInDocWindow;
 
     @FXML
-    private CheckBox mainDivCheckBox;
+    private CheckBox quarterlyCheckBox;
 
     @FXML
-    private CheckBox firstDivCheckBox;
-
-    @FXML
-    private CheckBox secondDivCheckBox;
-
-    @FXML
-    private CheckBox thirdDivCheckBox;
+    private ListView<String> responsibleListView;
 
     @FXML
     private Label s;
 
     @FXML
-    private CheckBox savePatternCheckBox;
+    private ListView<String> typeOfActivityListView;
+
+    @FXML
+    private CheckBox weeklyChekBox;
+
+    @FXML
+    private Button showTheDocButton;
     static String nameOfDoc = "null";
+    static String execLine = "";
+    static String coexecLine = "";
+    static String responsibleLine = "";
+
+    Set<String> listOfResponsible = new LinkedHashSet<>();
+    Set<String> listOfExec = new LinkedHashSet<>();
+    Set<String> listOfCoexec = new LinkedHashSet<>();
+
     @FXML
     void initialize() throws IOException {
         nameOfDocumentTextField.setText(nameOfDoc);
         DBHandler dbh = new DBHandler();
-
         HashMap<String, ArrayList<String>> mainMap = dbh.getGuideInfo();
-        ArrayList<String> kindOfActArray = mainMap.get("kindOfActList");
-//        kindOfActItemsCombobox.setPromptText(kindOfActArray.get(1));
-        for (String a : kindOfActArray) kindOfActItemsCombobox.getItems().add(a);
-        // Проставляем на первоначальном комбобоксе фамилии отетственных
-        for (String c : mainMap.get("ТО")) mainPersonsCombobox.getItems().add(c);
-//        mainPersonsCombobox.setPromptText(mainMap.get("ТО").get(0));
 
-        //Проставлеяем исполнителей
-        for(String z : mainMap.get("forTakeAnExecutorList")) itemExecutorsCombobox.getItems().add(z);
-//        itemExecutorsCombobox.setPromptText(mainMap.get("forTakeAnExecutorList").get(0));
+        // Проставляем виды направлений деятельности
+        ObservableList<String> kindOfActArray = FXCollections.observableArrayList(mainMap.get("kindOfActList"));
+        typeOfActivityListView.setItems(kindOfActArray);
 
-        //Проставляем соисполнителей
-        for(String z : mainMap.get("forTakeAnCoExecutorList")) itemAssistantsCombobox.getItems().add(z);
-//        itemAssistantsCombobox.setPromptText(mainMap.get("forTakeAnCoExecutorList").get(0));
+        // Проставляем на  responsibleListView фамилии отетственных
+        ObservableList<String> responsiblePersonsArray = FXCollections.observableArrayList(mainMap.get("forTakeAChoiceList"));
+        responsibleListView.setItems(responsiblePersonsArray);
 
-        kindOfActItemsCombobox.setOnAction(actionEvent -> {
+        //Проставлеяем executors
+        ObservableList<String> executorsArray = FXCollections.observableArrayList(mainMap.get("forTakeAnExecutorList"));
+        executorsListView.setItems(executorsArray);
+
+        //Проставляем coexecutors
+        ObservableList<String> coexecutorsArray = FXCollections.observableArrayList(mainMap.get("forTakeAnCoExecutorList"));
+        coexecutorsListView.setItems(coexecutorsArray);
+
+
+        addItemToDocBtn.setOnAction(actionEvent -> {
+            for (String s : listOfResponsible) {
+                responsibleLine += s + "; ";
+                System.out.println(responsibleLine);
+            }
+            for (String s : listOfExec) {
+                execLine += s + "; ";
+                System.out.println(execLine);
+            }
+            for (String s : listOfCoexec) {
+                coexecLine += s + "; ";
+                System.out.println(coexecLine);
+            }
+
+            dbh.addItemsInDoc(nameOfDoc, numberDocumentField.getText(), nameOfDocumentTextField.getText(),
+                    numberOfDocumentTextField.getText(), itemTextCurrentDocField.getText(),
+                    typeOfActivityListView.getSelectionModel().getSelectedItems().get(0),
+                    responsibleLine, execLine, coexecLine);
+        });
+
+        showTheDocButton.setOnAction(actionEvent -> {
+            Runtime rt = Runtime.getRuntime();
             try {
-                HashMap<String, ArrayList<String>> sMap = dbh.getGuideInfo();
-                String nameOfKind = kindOfActItemsCombobox.getValue();
-                ArrayList<String> mainPersonsList = sMap.get(nameOfKind);
-                mainPersonsCombobox.getItems().clear();
-                for (String b : mainPersonsList) {
-                    mainPersonsCombobox.getItems().add(b);
-                }
-//                mainPersonsCombobox.setPromptText(mainPersonsList.get(0));
+                Process p = rt.exec("C:\\Program Files (x86)\\Microsoft Office\\Office12\\EXCEL.exe documents.xls");
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-
-
-        });
-        addItemToDocBtn.setOnAction(actionEvent -> {
-                dbh.addItemsInDoc(nameOfDoc, numberDocumentField.getText(), nameOfDocumentTextField.getText(),
-                        numberOfDocumentTextField.getText(), itemTextCurrentDocField.getText(), kindOfActItemsCombobox.getValue(),
-                        mainPersonsCombobox.getValue(), itemExecutorsCombobox.getValue(), itemAssistantsCombobox.getValue());
-
-
-//            dbh.addItemsInDoc(nameOfDoc, numberDocumentField.getText(), itemTextCurrentDocField.getText(),
-//                        kindOfActItemsCombobox.getValue(), itemExecutorsCombobox.getValue(), itemAssistantsCombobox.getValue(),
-//                        mainDivCheckBox.isSelected(), firstDivCheckBox.isSelected(), secondDivCheckBox.isSelected(), thirdDivCheckBox.isSelected());
-
         });
 
-        okBtnItemInDocWindow.setOnAction(actionEvent -> {
+        okBtnItemInDocWindow.setOnAction(actionOkEvent -> {
+
             Stage addDoc = (Stage) okBtnItemInDocWindow.getScene().getWindow();
             addDoc.close();
 
@@ -169,7 +168,42 @@ public class AddItemInDocumentController {
 //            rwin.toRefresh("/com/example/planning/documentsWindow.fxml", "Documents");
         });
 
+// Переделать по-человечски!!!! Без повторения кода
+        executorsListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        executorsListView.setOnMouseClicked(new EventHandler<Event>() {
+            @Override
+            public void handle(Event event) {
+                ObservableList<String> selectedItems = executorsListView.getSelectionModel().getSelectedItems();
+                for (String s : selectedItems) {
+                    listOfExec.add(s);
+                    System.out.println(listOfExec);
+                }
+            }
+        });
+
+        coexecutorsListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        coexecutorsListView.setOnMouseClicked(new EventHandler<Event>() {
+            @Override
+            public void handle(Event event) {
+                ObservableList<String> selectedItems = coexecutorsListView.getSelectionModel().getSelectedItems();
+                for (String s : selectedItems) {
+                    listOfCoexec.add(s);
+                    System.out.println(listOfCoexec);
+                }
+            }
+        });
+
+        responsibleListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        responsibleListView.setOnMouseClicked(new EventHandler<Event>() {
+            @Override
+            public void handle(Event event) {
+                ObservableList<String> selectedItems = responsibleListView.getSelectionModel().getSelectedItems();
+                for (String s : selectedItems) {
+                    listOfResponsible.add(s);
+                    System.out.println(listOfResponsible);
+                }
+            }
+        });
+
     }
-
-
 }

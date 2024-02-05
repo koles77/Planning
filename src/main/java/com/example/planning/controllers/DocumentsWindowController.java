@@ -59,7 +59,7 @@ public class DocumentsWindowController {
                 nameDocBtn.setOnMouseClicked(mouseEvent -> {
                     AddItemInDocumentController.nameOfDoc = nameDocBtn.getText();
                     ActionWithWindow action = new ActionWithWindow();
-                    action.toShow("/com/example/planning/addItemInDocumentWindow.fxml", nameDocBtn.getText(), 500, 600);
+                    action.toShow("/com/example/planning/fillingOutOfDocumentFormWindow.fxml", nameDocBtn.getText(), 800, 700);
                     Stage currentStage = (Stage) nameDocBtn.getScene().getWindow();
                     currentStage.close();
                 });
