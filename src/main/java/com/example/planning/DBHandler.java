@@ -3,6 +3,8 @@ package com.example.planning;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import org.apache.poi.EmptyFileException;
@@ -12,25 +14,25 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.CellType;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+
 
 public class DBHandler {
-//    File file = new File("src\\main\\resources\\DB\\documents.xls");
+    //    File file = new File("src\\main\\resources\\DB\\documents.xls");
     File file = new File("documents.xls");
 
-//    String path = "src\\main\\resources\\DB\\documents.xls";
+    //    String path = "src\\main\\resources\\DB\\documents.xls";
     String path = "documents.xls";
 
     public ArrayList<String> listOfNames = new ArrayList<>();
+
     public DBHandler() throws IOException {
 
         if (!file.exists()) {
             System.out.println("file is not available");
-          }
-
-        else {
+        } else {
             FileInputStream forMainDB = new FileInputStream(file);
             HSSFWorkbook wb = new HSSFWorkbook(forMainDB, true);
             System.out.println("File is ready! Quantity of sheets is:" + wb.getNumberOfSheets());
@@ -89,45 +91,16 @@ public class DBHandler {
                 kindOfActList.add(getGuideWB.getSheetAt(0).getRow(i).getCell(1).getStringCellValue());
                 i++;
             }
-        }
-        catch (NullPointerException e) {
+        } catch (NullPointerException e) {
             arrayOfArray.put("kindOfActList", kindOfActList);
-//            System.out.println("Исключение ++");
         }
-
-        int j = 3;
-        try {
-            while (!getGuideWB.getSheetAt(0).getRow(1).getCell(j).getStringCellValue().equals("Исполнитель")) {
-                ArrayList<String> kindOfWorkPersons = new ArrayList<>();
-                int k = 2;
-                String nameOfKind = getGuideWB.getSheetAt(0).getRow(1).getCell(j).getStringCellValue();
-                forTakeAChoiceList.add(nameOfKind);
-                try{
-                    while (getGuideWB.getSheetAt(0).getRow(k).getCell(j).getCellType() != CellType._NONE) {
-                        kindOfWorkPersons.add(getGuideWB.getSheetAt(0).getRow(k).getCell(j).getStringCellValue());
-                        k++;
-                    }
-                }
-                catch (NullPointerException s) {
-                    System.out.println("Исключение номер " + k);
-                }
-                arrayOfArray.put(nameOfKind, kindOfWorkPersons);
-                j += 2;
-            }
-            arrayOfArray.put("forTakeAChoiceList", forTakeAChoiceList);
-        }
-        catch (NullPointerException s) {
-            System.out.println("ForTakeAchoiceList exception");
-        }
-
         int z = 2;
         try {
             while (getGuideWB.getSheetAt(0).getRow(z).getCell(11).getCellType() == CellType.STRING) {
                 forTakeAnExecutorList.add(getGuideWB.getSheetAt(0).getRow(z).getCell(11).getStringCellValue());
                 z++;
             }
-        }
-        catch (NullPointerException e) {
+        } catch (NullPointerException e) {
             arrayOfArray.put("forTakeAnExecutorList", forTakeAnExecutorList);
         }
 
@@ -137,19 +110,18 @@ public class DBHandler {
                 forTakeAnCoExecutorList.add(getGuideWB.getSheetAt(0).getRow(f).getCell(13).getStringCellValue());
                 f++;
             }
-        }
-        catch (NullPointerException e) {
+        } catch (NullPointerException e) {
             arrayOfArray.put("forTakeAnCoExecutorList", forTakeAnCoExecutorList);
         }
 
-
         getGuideWB.close();
         getGuideFIS.close();
-    return  arrayOfArray;
+        return arrayOfArray;
     }
 
-    public void addItemsInDoc (String sheetName, String numberOfItem, String nameOfDocument, String registrationNumer,
-                               String textOfItem, String kindOfAction, String responsible, String executor, String coexecutor) {
+    public void addItemsInDoc(String sheetName, String numberOfItem, String nameOfDocument, String registrationNumer,
+                              String textOfItem, String kindOfAction, String executor, String coexecutor,
+                              ArrayList<String> date) {
         //пишем метод для добавления пунктов в док
         int indexOfCurrentRow = getNumberOfcurrentRow(sheetName);
         try {
@@ -162,10 +134,14 @@ public class DBHandler {
             currentRow.createCell(2).setCellValue(registrationNumer.toString());
             currentRow.createCell(3).setCellValue(textOfItem.toString());
             currentRow.createCell(4).setCellValue(kindOfAction.toString());
-            currentRow.createCell(5).setCellValue(responsible.toString());
+
             currentRow.createCell(6).setCellValue(executor.toString());
             currentRow.createCell(7).setCellValue(coexecutor.toString());
-
+            int i = 8;
+            for (String d : date) {
+                currentRow.createCell(i).setCellValue(d);
+                i++;
+            }
 
             FileOutputStream fos = new FileOutputStream(path);
             tempWB.write(fos);
@@ -173,8 +149,6 @@ public class DBHandler {
         } catch (Exception e) {
             System.out.println(e);
         }
-
-
 
 //            FileOutputStream fos = new FileOutputStream(path);
 //            tempWB.write(fos);
@@ -198,7 +172,82 @@ public class DBHandler {
         } catch (Exception e) {
             System.out.println(e);
         }
-    return indexOfRow;
+        return indexOfRow;
+    }
+
+    //Работа с ListView (добавление элементов, отметки на кнопках, множественный выбор)
+    public void toSetItemInListView(ListView<String> listView, Set<String> setList, Label label) {
+        listView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        listView.setOnMouseClicked((EventHandler<Event>) event -> {
+            System.out.println(listView.getSelectionModel().getSelectedItem() + " " + setList.toString());
+            ObservableList<String> selectedItems = listView.getSelectionModel().getSelectedItems();
+            if (!setList.isEmpty()) {
+                Iterator<String> iterator = setList.iterator();
+                while (iterator.hasNext()) {
+                    String name = iterator.next();
+                    if (name.equals(listView.getSelectionModel().getSelectedItem())) {
+                        iterator.remove();
+
+                        StringBuilder line = new StringBuilder();
+                        for (String n : setList) line.append(n + "; ");
+                        label.setText(line.toString());
+                    } else {
+                        for (String s : selectedItems) {
+                            setList.add(s);
+
+                            StringBuilder line = new StringBuilder();
+                            for (String n : setList) line.append(n + "; ");
+                            label.setText(line.toString());
+                        }
+                    }
+                }
+            } else {
+                for (String s : selectedItems) {
+                    setList.add(s);
+
+                    StringBuilder line = new StringBuilder();
+                    for (String n : setList) line.append(n + "; ");
+                    label.setText(line.toString());
+                }
+            }
+        });
+    }
+
+    //Работа с датами
+    public ArrayList<String> toGetDateArrList(LocalDate date, CheckBox daily, CheckBox weekly, CheckBox monthly, CheckBox quarently) {
+        ArrayList<String> targetArr = new ArrayList<>();
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        String formatedDate = date.format(dtf);
+        if (daily.isSelected()) {
+            targetArr.add("everyDay");
+            return targetArr;
+        }
+        // Недельные мероприятия
+        else if (weekly.isSelected()) {
+            int currentYear = date.getYear();
+            targetArr.add(formatedDate);
+            while (date.getDayOfYear() < 365 && date.getYear() == currentYear) {
+                date = date.plusDays(7);
+                formatedDate = date.format(dtf);
+                targetArr.add(formatedDate.toString());
+            }
+            return targetArr;
+        }
+        targetArr.add(formatedDate);
+        return targetArr;
+    }
+
+   //Увеличиваем дату на месяц
+
+    public ArrayList<String> toIncreaseDateByMonth(LocalDate date) {
+        ArrayList<String> listOfDate = new ArrayList<>();
+        int currentYear = date.getYear();
+        listOfDate.add(date.toString());
+        while (date.getDayOfYear() < 365 && date.getYear() == currentYear) {
+            date = date.plusMonths(1);
+            listOfDate.add(date.toString());
+        }
+        return listOfDate;
     }
 
 }
