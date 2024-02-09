@@ -233,21 +233,29 @@ public class DBHandler {
             }
             return targetArr;
         }
+        //Ежемесячные мероприятия
+        else if (monthly.isSelected()) {
+            int currentYear = date.getYear();
+            targetArr.add(formatedDate);
+            while (date.getDayOfYear() < 365 && date.getYear() == currentYear) {
+                date = date.plusMonths(1);
+                formatedDate = date.format(dtf);
+                targetArr.add(formatedDate.toString());
+            }
+            return targetArr;
+        }
+        //Ежеквартальные мероприятия
+        else if (quarently.isSelected()) {
+            int currentYear = date.getYear();
+            targetArr.add(formatedDate);
+            while (date.getDayOfYear() < 365 && date.getYear() == currentYear) {
+                date = date.plusMonths(3);
+                formatedDate = date.format(dtf);
+                targetArr.add(formatedDate.toString());
+            }
+            return targetArr;
+        }
         targetArr.add(formatedDate);
         return targetArr;
     }
-
-   //Увеличиваем дату на месяц
-
-    public ArrayList<String> toIncreaseDateByMonth(LocalDate date) {
-        ArrayList<String> listOfDate = new ArrayList<>();
-        int currentYear = date.getYear();
-        listOfDate.add(date.toString());
-        while (date.getDayOfYear() < 365 && date.getYear() == currentYear) {
-            date = date.plusMonths(1);
-            listOfDate.add(date.toString());
-        }
-        return listOfDate;
-    }
-
 }

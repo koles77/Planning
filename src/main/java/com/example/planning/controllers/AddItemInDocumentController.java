@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.util.*;
 
 
+import com.example.planning.ActionWithWindow;
 import com.example.planning.DBHandler;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -100,6 +101,7 @@ public class AddItemInDocumentController {
     @FXML
     private Button showTheDocButton;
     static String nameOfDoc = "null";
+    static String numberOfDoc = "null";
     static String execLine = "";
     static String coexecLine = "";
 
@@ -110,6 +112,7 @@ public class AddItemInDocumentController {
     @FXML
     void initialize() throws IOException {
         nameOfDocumentTextField.setText(nameOfDoc);
+        numberOfDocumentTextField.setText(numberOfDoc);
         DBHandler dbh = new DBHandler();
         HashMap<String, ArrayList<String>> mainMap = dbh.getGuideInfo();
         itemTextCurrentDocField.setWrapText(true);
@@ -126,9 +129,7 @@ public class AddItemInDocumentController {
         ObservableList<String> coexecutorsArray = FXCollections.observableArrayList(mainMap.get("forTakeAnCoExecutorList"));
         coexecutorsListView.setItems(coexecutorsArray);
 
-
         addItemToDocBtn.setOnAction(actionEvent -> {
-
             for (String s : listOfExec) {
                 execLine += s + "; ";
                 System.out.println(execLine);
@@ -140,11 +141,6 @@ public class AddItemInDocumentController {
             LocalDate date = dueDatePicker.getValue();
             dateArg = dbh.toGetDateArrList(date, dailyChekBox, weeklyChekBox, monthlyCheckBox, quarterlyCheckBox);
 
-            if (monthlyCheckBox.isSelected()) {
-                ArrayList<String> arr = dbh.toIncreaseDateByMonth(date);
-                for (String s : arr) System.out.println(s);
-            }
-
             dbh.addItemsInDoc(nameOfDoc, numberDocumentField.getText(), nameOfDocumentTextField.getText(),
                     numberOfDocumentTextField.getText(), itemTextCurrentDocField.getText(),
                     typeOfActivityListView.getSelectionModel().getSelectedItems().get(0),
@@ -153,7 +149,6 @@ public class AddItemInDocumentController {
 
         showTheDocButton.setOnAction(actionEvent -> {
             Runtime rt = Runtime.getRuntime();
-
             File file = new File("C:\\Program Files (x86)\\Microsoft Office\\Office12\\EXCEL.exe");
             File file1 = new File("C:\\Program Files\\Microsoft Office\\Office14\\EXCEL.exe");
             if (file.exists()) {
@@ -178,8 +173,8 @@ public class AddItemInDocumentController {
             Stage addDoc = (Stage) okBtnItemInDocWindow.getScene().getWindow();
             addDoc.close();
 
-//            ActionWithWindow rwin = new ActionWithWindow();
-//            rwin.toRefresh("/com/example/planning/documentsWindow.fxml", "Documents");
+            ActionWithWindow rwin = new ActionWithWindow();
+            rwin.toRefresh("/com/example/planning/documentsWindow.fxml", "Documents");
         });
 
 

@@ -15,6 +15,7 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
@@ -45,7 +46,6 @@ public class DocumentsWindowController {
 
     @FXML
     void initialize()  {
-
         try {
             DBHandler dbHandler = new DBHandler();
             //Добавляем из хэндлера массив с наименованиями листов для создания кнопок
