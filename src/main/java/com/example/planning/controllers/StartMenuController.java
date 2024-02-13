@@ -39,6 +39,10 @@ public class StartMenuController {
             action.toShow("/com/example/planning/documentsWindow.fxml", "Documents", 500, 500);
 
         });
+        controlButton.setOnAction(actionEvent -> {
+            ActionWithWindow action = new ActionWithWindow();
+            action.toShow("/com/example/planning/controlFormWindow.fxml", "Control", 500, 500);
+        });
 
     }
 

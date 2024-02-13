@@ -101,7 +101,6 @@ public class AddItemInDocumentController {
     @FXML
     private Button showTheDocButton;
     static String nameOfDoc = "null";
-    static String numberOfDoc = "null";
     static String execLine = "";
     static String coexecLine = "";
 
@@ -112,11 +111,10 @@ public class AddItemInDocumentController {
     @FXML
     void initialize() throws IOException {
         nameOfDocumentTextField.setText(nameOfDoc);
-        numberOfDocumentTextField.setText(numberOfDoc);
         DBHandler dbh = new DBHandler();
         HashMap<String, ArrayList<String>> mainMap = dbh.getGuideInfo();
         itemTextCurrentDocField.setWrapText(true);
-
+        numberOfDocumentTextField.setText(dbh.getNumberOfTheDoc(nameOfDoc));
         // Проставляем виды направлений деятельности
         ObservableList<String> kindOfActArray = FXCollections.observableArrayList(mainMap.get("kindOfActList"));
         typeOfActivityListView.setItems(kindOfActArray);
@@ -130,6 +128,7 @@ public class AddItemInDocumentController {
         coexecutorsListView.setItems(coexecutorsArray);
 
         addItemToDocBtn.setOnAction(actionEvent -> {
+
             for (String s : listOfExec) {
                 execLine += s + "; ";
                 System.out.println(execLine);
@@ -145,6 +144,9 @@ public class AddItemInDocumentController {
                     numberOfDocumentTextField.getText(), itemTextCurrentDocField.getText(),
                     typeOfActivityListView.getSelectionModel().getSelectedItems().get(0),
                     execLine, coexecLine, dateArg);
+
+            listOfExec = new LinkedHashSet<>();
+            listOfCoexec = new LinkedHashSet<>();
         });
 
         showTheDocButton.setOnAction(actionEvent -> {
@@ -164,8 +166,6 @@ public class AddItemInDocumentController {
                     throw new RuntimeException(e);
                 }
             }
-
-
         });
 
         okBtnItemInDocWindow.setOnAction(actionOkEvent -> {
@@ -177,10 +177,8 @@ public class AddItemInDocumentController {
             rwin.toRefresh("/com/example/planning/documentsWindow.fxml", "Documents");
         });
 
-
         dbh.toSetItemInListView(executorsListView, listOfExec, selectedExecutorsLabel);
         dbh.toSetItemInListView(coexecutorsListView, listOfCoexec, selectedCoExecutorsLabel);
-
 
     }
 }

@@ -61,7 +61,6 @@ public class CreateDocumentController {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            AddItemInDocumentController.numberOfDoc = numberDocumentField.getText();
             Stage addDoc = (Stage) okBtnCreateDocWindow.getScene().getWindow();
             addDoc.close();
 

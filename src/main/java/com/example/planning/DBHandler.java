@@ -7,6 +7,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.layout.VBox;
 import org.apache.poi.EmptyFileException;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -77,7 +78,6 @@ public class DBHandler {
 
     public HashMap<String, ArrayList<String>> getGuideInfo() throws IOException {
         ArrayList<String> kindOfActList = new ArrayList<>();
-        ArrayList<String> forTakeAChoiceList = new ArrayList<>();
         ArrayList<String> forTakeAnExecutorList = new ArrayList<>();
         ArrayList<String> forTakeAnCoExecutorList = new ArrayList<>();
 
@@ -175,12 +175,31 @@ public class DBHandler {
         return indexOfRow;
     }
 
+    //Получить номер документа и поместить его в форму добавления пунктов в документ
+    public String getNumberOfTheDoc(String sheet) {
+        String numberOfThedoc = null;
+        try {
+            FileInputStream fis = new FileInputStream(file);
+            HSSFWorkbook tempWB = new HSSFWorkbook(fis, true);
+            HSSFSheet sheetOfCurrentDoc = tempWB.getSheet(sheet);
+            numberOfThedoc = sheetOfCurrentDoc.getRow(1).getCell(0).toString();
+            fis.close();
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return numberOfThedoc;
+    }
+
     //Работа с ListView (добавление элементов, отметки на кнопках, множественный выбор)
     public void toSetItemInListView(ListView<String> listView, Set<String> setList, Label label) {
+
         listView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         listView.setOnMouseClicked((EventHandler<Event>) event -> {
+
             System.out.println(listView.getSelectionModel().getSelectedItem() + " " + setList.toString());
             ObservableList<String> selectedItems = listView.getSelectionModel().getSelectedItems();
+
             if (!setList.isEmpty()) {
                 Iterator<String> iterator = setList.iterator();
                 while (iterator.hasNext()) {
@@ -218,6 +237,7 @@ public class DBHandler {
         ArrayList<String> targetArr = new ArrayList<>();
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         String formatedDate = date.format(dtf);
+
         if (daily.isSelected()) {
             targetArr.add("everyDay");
             return targetArr;
@@ -257,5 +277,39 @@ public class DBHandler {
         }
         targetArr.add(formatedDate);
         return targetArr;
+    }
+
+    //получение записей из БД
+    public ArrayList<String> takeActivityFromDB() throws IOException {
+        ArrayList<String> listOfPoints = new ArrayList<>();
+        FileInputStream fis = new FileInputStream(file);
+        HSSFWorkbook tempWB = new HSSFWorkbook(fis);
+        int quantity = tempWB.getNumberOfSheets();
+        LocalDate date = LocalDate.now();
+        System.out.println(date);
+        LocalDate controlDate = date.plusDays(10);
+        System.out.println(tempWB.getSheetAt(2).getLastRowNum());
+
+        for (int i = 2; i <= quantity - 1; i++) {
+            HSSFSheet sheet = tempWB.getSheetAt(i);
+            int k = 3;
+            while (k <= sheet.getLastRowNum()) {
+                int j = 8;
+                while (sheet.getRow(k).getCell(j) != null) {
+                    String dateInTab = sheet.getRow(k).getCell(j).getStringCellValue();
+                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+                    LocalDate localDate = LocalDate.parse(dateInTab, dtf);
+                    if (localDate.isAfter(date) && localDate.isBefore(controlDate)) {
+                        String point = sheet.getRow(k).getCell(0).getStringCellValue() + "\n" + sheet.getRow(k).getCell(3).getStringCellValue() +
+                                "\n" + sheet.getRow(k).getCell(4).getStringCellValue() + "\n " + dateInTab;
+                        listOfPoints.add(point);
+                        System.out.println("пункт");
+                    }
+                    j++;
+                }
+                k++;
+            }
+        }
+        return listOfPoints;
     }
 }
