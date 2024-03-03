@@ -73,6 +73,9 @@
             <CheckBox fx:id="dailyChekBox" layoutX="650.0" layoutY="320.0" mnemonicParsing="false" text="Daily" />
             <Label fx:id="selectedExecutorsLabel" layoutX="15.0" layoutY="578.0" prefHeight="35.0" prefWidth="244.0" text="Исполнитель:" textAlignment="CENTER" />
             <Label fx:id="selectedCoExecutorsLabel" layoutX="283.0" layoutY="578.0" prefHeight="35.0" prefWidth="244.0" text="Соисполнитель:" textAlignment="CENTER" />
+            <Label fx:id="DateOneLabel" layoutX="648.0" layoutY="432.0" prefHeight="35.0" prefWidth="127.0" text="Date 1" textAlignment="CENTER" />
+            <Label fx:id="DateTwoLabel" layoutX="648.0" layoutY="467.0" prefHeight="35.0" prefWidth="127.0" text="Date 2" textAlignment="CENTER" />
+            <Button fx:id="CleanDateBtnItemInDoc" layoutX="648.0" layoutY="502.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="127.0" text="Clean date" />
       </children>
     </AnchorPane>
   </children>

@@ -31,8 +31,8 @@ public class StartMenuController {
     @FXML
     void initialize() {
         documentsButton.setOnAction(actionEvent -> {
-            Stage mainWindow = (Stage) documentsButton.getScene().getWindow();
-            mainWindow.close();
+//            Stage mainWindow = (Stage) documentsButton.getScene().getWindow();
+//            mainWindow.close();
 
         // Запускается окно всех имеющихся документов
             ActionWithWindow action = new ActionWithWindow();

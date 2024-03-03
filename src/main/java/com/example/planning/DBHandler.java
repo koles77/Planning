@@ -149,14 +149,6 @@ public class DBHandler {
         } catch (Exception e) {
             System.out.println(e);
         }
-
-//            FileOutputStream fos = new FileOutputStream(path);
-//            tempWB.write(fos);
-//            fos.close();
-//            Неполный список полей для заполнения листа
-//            String numerOfitem, String textOfItem, String kindOfAct, String executor,
-//                    String coexecutor, Boolean mainDiv, Boolean firstDiv, Boolean secDiv, Boolean thirdDiv
-
     }
 
     public int getNumberOfcurrentRow(String sheetName) {

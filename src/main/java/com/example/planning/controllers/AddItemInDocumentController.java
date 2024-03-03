@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
+//import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 
@@ -92,6 +93,7 @@ public class AddItemInDocumentController {
 
     @FXML
     private CheckBox weeklyChekBox;
+
     @FXML
     private Label selectedCoExecutorsLabel;
 
@@ -100,6 +102,15 @@ public class AddItemInDocumentController {
 
     @FXML
     private Button showTheDocButton;
+
+    @FXML
+    private Button CleanDateBtnItemInDoc;
+
+    @FXML
+    private Label DateOneLabel;
+
+    @FXML
+    private Label DateTwoLabel;
     static String nameOfDoc = "null";
     static String execLine = "";
     static String coexecLine = "";
@@ -137,8 +148,18 @@ public class AddItemInDocumentController {
                 coexecLine += s + "; ";
                 System.out.println(coexecLine);
             }
+
             LocalDate date = dueDatePicker.getValue();
             dateArg = dbh.toGetDateArrList(date, dailyChekBox, weeklyChekBox, monthlyCheckBox, quarterlyCheckBox);
+
+//            if (dateArg.size() != 2) {
+//                dateArg = dbh.toGetDateArrList(date, dailyChekBox, weeklyChekBox, monthlyCheckBox, quarterlyCheckBox);
+//                System.out.println("dateArg != 2");
+//            } else {
+//                ArrayList<String> targetArr = new ArrayList<>();
+//                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+//                for (String s : dateArg) targetArr.add(LocalDate.parse(s).format(dtf));
+//            }
 
             dbh.addItemsInDoc(nameOfDoc, numberDocumentField.getText(), nameOfDocumentTextField.getText(),
                     numberOfDocumentTextField.getText(), itemTextCurrentDocField.getText(),
@@ -147,6 +168,8 @@ public class AddItemInDocumentController {
 
             listOfExec = new LinkedHashSet<>();
             listOfCoexec = new LinkedHashSet<>();
+            DateOneLabel.setText("Date 1");
+            DateTwoLabel.setText("Date 2");
         });
 
         showTheDocButton.setOnAction(actionEvent -> {
@@ -167,18 +190,28 @@ public class AddItemInDocumentController {
                 }
             }
         });
+//      Добавление двух дат
+        dueDatePicker.setOnAction(actionEvent -> {
+            dateArg.add(dueDatePicker.getValue().toString());
+            if (DateOneLabel.getText().equals("Date 1")) DateOneLabel.setText(dueDatePicker.getValue().toString());
+            else DateTwoLabel.setText(dueDatePicker.getValue().toString());
+        });
+//      Кнопка очистки массива дат
+        CleanDateBtnItemInDoc.setOnAction(actionEvent -> {
+            dateArg.clear();
+            System.out.println(dateArg.size());
+            DateOneLabel.setText("Date 1");
+            DateTwoLabel.setText("Date 2");
+        });
 
         okBtnItemInDocWindow.setOnAction(actionOkEvent -> {
-
             Stage addDoc = (Stage) okBtnItemInDocWindow.getScene().getWindow();
             addDoc.close();
 
             ActionWithWindow rwin = new ActionWithWindow();
             rwin.toRefresh("/com/example/planning/documentsWindow.fxml", "Documents");
         });
-
         dbh.toSetItemInListView(executorsListView, listOfExec, selectedExecutorsLabel);
         dbh.toSetItemInListView(coexecutorsListView, listOfCoexec, selectedCoExecutorsLabel);
-
     }
 }
