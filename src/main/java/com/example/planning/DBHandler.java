@@ -13,7 +13,10 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Row;
+import org.controlsfx.control.tableview2.filter.filtereditor.SouthFilter;
 
+import javax.xml.transform.Source;
 import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -78,6 +81,7 @@ public class DBHandler {
 
     public HashMap<String, ArrayList<String>> getGuideInfo() throws IOException {
         ArrayList<String> kindOfActList = new ArrayList<>();
+        ArrayList<String> subsectionKindOfActList = new ArrayList<>();
         ArrayList<String> forTakeAnExecutorList = new ArrayList<>();
         ArrayList<String> forTakeAnCoExecutorList = new ArrayList<>();
 
@@ -94,6 +98,16 @@ public class DBHandler {
         } catch (NullPointerException e) {
             arrayOfArray.put("kindOfActList", kindOfActList);
         }
+        int k = 2;
+        try {
+            while (getGuideWB.getSheetAt(0).getRow(k).getCell(2).getCellType() != CellType._NONE) {
+                subsectionKindOfActList.add(getGuideWB.getSheetAt(0).getRow(k).getCell(2).getStringCellValue());
+                k++;
+            }
+        } catch (NullPointerException e) {
+            arrayOfArray.put("subsectionKindOfActList", subsectionKindOfActList);
+        }
+
         int z = 2;
         try {
             while (getGuideWB.getSheetAt(0).getRow(z).getCell(11).getCellType() == CellType.STRING) {
@@ -119,8 +133,8 @@ public class DBHandler {
         return arrayOfArray;
     }
 
-    public void addItemsInDoc(String sheetName, String numberOfItem, String nameOfDocument, String registrationNumer,
-                              String textOfItem, String kindOfAction, String executor, String coexecutor,
+    public void addItemsInDoc(String sheetName, String nameOfDocument, String registrationNumer,
+                              String textOfItem, String kindOfAction, String subsectionKindOfAction, String executor, String coexecutor,
                               ArrayList<String> date) {
         //пишем метод для добавления пунктов в док
         int indexOfCurrentRow = getNumberOfcurrentRow(sheetName);
@@ -129,12 +143,18 @@ public class DBHandler {
             HSSFWorkbook tempWB = new HSSFWorkbook(fis, true);
             HSSFRow currentRow = tempWB.getSheet(sheetName).createRow(indexOfCurrentRow);
 
-            currentRow.createCell(0).setCellValue(numberOfItem);
             currentRow.createCell(1).setCellValue(nameOfDocument.toString());
             currentRow.createCell(2).setCellValue(registrationNumer.toString());
             currentRow.createCell(3).setCellValue(textOfItem.toString());
             currentRow.createCell(4).setCellValue(kindOfAction.toString());
 
+            if (subsectionKindOfAction == null) {
+                if (kindOfAction.substring(0,4).contains("III.")) {
+                    subsectionKindOfAction = "3. ";
+                } else subsectionKindOfAction = "1. ";
+            }
+
+            currentRow.createCell(5).setCellValue(subsectionKindOfAction.toString());
             currentRow.createCell(6).setCellValue(executor.toString());
             currentRow.createCell(7).setCellValue(coexecutor.toString());
             int i = 8;
@@ -146,6 +166,7 @@ public class DBHandler {
             FileOutputStream fos = new FileOutputStream(path);
             tempWB.write(fos);
             fos.close();
+
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -271,16 +292,14 @@ public class DBHandler {
         return targetArr;
     }
 
-    //получение записей из БД
+    //получение записей из БД для контроля мероприятий
     public ArrayList<String> takeActivityFromDB() throws IOException {
         ArrayList<String> listOfPoints = new ArrayList<>();
         FileInputStream fis = new FileInputStream(file);
         HSSFWorkbook tempWB = new HSSFWorkbook(fis);
         int quantity = tempWB.getNumberOfSheets();
         LocalDate date = LocalDate.now();
-        System.out.println(date);
         LocalDate controlDate = date.plusDays(10);
-        System.out.println(tempWB.getSheetAt(2).getLastRowNum());
 
         for (int i = 2; i <= quantity - 1; i++) {
             HSSFSheet sheet = tempWB.getSheetAt(i);
@@ -289,13 +308,20 @@ public class DBHandler {
                 int j = 8;
                 while (sheet.getRow(k).getCell(j) != null) {
                     String dateInTab = sheet.getRow(k).getCell(j).getStringCellValue();
-                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-                    LocalDate localDate = LocalDate.parse(dateInTab, dtf);
-                    if (localDate.isAfter(date) && localDate.isBefore(controlDate)) {
+
+                    if (dateInTab.equals("everyDay")) {
                         String point = sheet.getRow(k).getCell(0).getStringCellValue() + "\n" + sheet.getRow(k).getCell(3).getStringCellValue() +
                                 "\n" + sheet.getRow(k).getCell(4).getStringCellValue() + "\n " + dateInTab;
                         listOfPoints.add(point);
-                        System.out.println("пункт");
+                    } else {
+                        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+                        LocalDate localDate = LocalDate.parse(dateInTab, dtf);
+                        if (localDate.isAfter(date) && localDate.isBefore(controlDate)) {
+                            String point = sheet.getRow(k).getCell(3).getStringCellValue() +
+                                    "\n" + sheet.getRow(k).getCell(4).getStringCellValue() + "\n " + dateInTab;
+                            listOfPoints.add(point);
+                            System.out.println("пункт");
+                        }
                     }
                     j++;
                 }
@@ -303,5 +329,102 @@ public class DBHandler {
             }
         }
         return listOfPoints;
+    }
+
+    // получение всех мероприятий в месяце
+    public HashMap<String, HashMap<String, ArrayList<String>>> takeActivityByMonthFromDB(int month) throws IOException {
+        HashMap<String, HashMap<String, ArrayList<String>>> generalMap = new HashMap<>();
+
+        FileInputStream fis = new FileInputStream(file);
+        HSSFWorkbook tempWB = new HSSFWorkbook(fis);
+        int quantity = tempWB.getNumberOfSheets();
+
+        int l = 2;
+
+        String itemOfKOA;
+        String itemOfSubsection;
+        // l - строка в справочнике
+        while (tempWB.getSheetAt(0).getRow(l).getCell(1) != null) {
+            itemOfKOA = tempWB.getSheetAt(0).getRow(l).getCell(1).toString();
+            generalMap.put(itemOfKOA, new HashMap<>());
+
+
+            int m = 2;
+            while (tempWB.getSheetAt(0).getRow(m).getCell(2) != null) {
+                itemOfSubsection = tempWB.getSheetAt(0).getRow(m).getCell(2).toString();
+//                itemOfKOA = tempWB.getSheetAt(0).getRow(m).getCell(1).toString();
+
+                int indexOfSubsection = 0; // индекс подраздела
+
+              // разобраться нах!!!!!
+                if (itemOfKOA.contains("IV.")) indexOfSubsection = 4;
+                else if (itemOfKOA.contains("III.")) {
+                    indexOfSubsection = 3;
+                    generalMap.get(itemOfKOA).put("3. ", new ArrayList<>());
+                }
+                else if (itemOfKOA.contains("II.")) indexOfSubsection = 2;
+                else if (itemOfKOA.contains("I.")) {
+                    indexOfSubsection = 1;
+                    generalMap.get(itemOfKOA).put("1. ", new ArrayList<>());
+                }
+
+                try {
+                    while (!itemOfSubsection.equals(null)) {
+                       if (itemOfSubsection.substring(0,1).equals(String.valueOf(indexOfSubsection))) {
+                            generalMap.get(itemOfKOA).put(itemOfSubsection, new ArrayList<>());
+                        }
+                        itemOfSubsection = tempWB.getSheetAt(0).getRow(m).getCell(2).toString();
+                        m++;
+                    }
+                } catch (NullPointerException s) {
+                    System.out.println(s);
+                }
+            }
+            l++;
+        }
+
+        for (int i = 2; i <= quantity - 1; i++) {
+            HSSFSheet sheet = tempWB.getSheetAt(i);
+            // k - строки
+            int k = 3;
+            while (k <= sheet.getLastRowNum()) {
+                // j - столбцы
+                int j = 8;
+                while (sheet.getRow(k).getCell(j) != null) {
+                    String dateInTab = sheet.getRow(k).getCell(j).getStringCellValue();
+                    Row row = sheet.getRow(k);
+                    if (dateInTab.equals("everyDay")) {
+                        generalMap.get(row.getCell(4).toString()).get(row.getCell(5).toString()).add(row.getCell(3).toString()
+                                + "; Исполнитель: " + row.getCell(6).toString() + " Соисполнитель: " + row.getCell(7).toString()
+                                + " Срок исполнения: ежедневно.");
+                    }
+                    j++;
+                }
+                k++;
+
+
+
+//                {
+
+//                    else {
+//                        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+//                        LocalDate localDate = LocalDate.parse(dateInTab, dtf);
+//
+//                        if (localDate.getMonthValue() == month) {
+//                            String point = sheet.getRow(k).getCell(0).getStringCellValue() + "\n" + sheet.getRow(k).getCell(3).getStringCellValue() +
+//                                    "\n" + sheet.getRow(k).getCell(4).getStringCellValue() + "\n" + dateInTab;
+//                            listOfPoints.add(point);
+//                        }
+//                    }
+//                    j++;
+
+//                }
+
+            }
+        }
+        return generalMap;
+    }
+
+    private record contains() {
     }
 }

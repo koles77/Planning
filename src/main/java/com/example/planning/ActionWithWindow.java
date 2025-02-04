@@ -13,7 +13,7 @@ public class ActionWithWindow {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation((getClass().getResource(path)));
         try {
-            Scene docsScene = new Scene(loader.load(), 500, 500);
+            Scene docsScene = new Scene(loader.load(), 800, 700);
             createDocStage.setTitle(title);
             createDocStage.setScene(docsScene);
             createDocStage.show();

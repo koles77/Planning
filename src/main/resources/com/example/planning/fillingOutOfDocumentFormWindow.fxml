@@ -34,6 +34,7 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
@@ -49,33 +50,41 @@
             <Label fx:id="currentDocNameLabel" layoutX="14.0" layoutY="14.0" prefHeight="35.0" prefWidth="122.0" text="Название документа" textAlignment="CENTER" />
             <Button fx:id="okBtnItemInDocWindow" layoutX="349.0" layoutY="647.0" mnemonicParsing="false" text="Ok" />
             <Button fx:id="cancelBtnCreateDocWindow" layoutX="399.0" layoutY="647.0" mnemonicParsing="false" text="Cancel" />
-            <TextField fx:id="numberDocumentField" layoutX="114.0" layoutY="87.0" prefHeight="26.0" prefWidth="142.0" promptText="№ пункта" />
             <Label fx:id="numberCurrentDocLabel" layoutX="14.0" layoutY="49.0" prefHeight="35.0" prefWidth="474.0" text="Номер документа" textAlignment="CENTER" />
-            <Label fx:id="numberItemCurrentDocLabel" layoutX="13.0" layoutY="84.0" prefHeight="35.0" prefWidth="88.0" text="Номер пункта" textAlignment="CENTER" />
-            <Label fx:id="itemTextCurrentDocLabel" layoutX="13.0" layoutY="119.0" prefHeight="35.0" prefWidth="474.0" text="Содержание пункта" textAlignment="CENTER" />
+            <Label fx:id="itemTextCurrentDocLabel" layoutX="15.0" layoutY="84.0" prefHeight="35.0" prefWidth="474.0" text="Содержание пункта" textAlignment="CENTER" />
             <AnchorPane layoutX="14.0" layoutY="368.0" />
-            <Button fx:id="addItemToDocBtn" layoutX="14.0" layoutY="222.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="121.0" text="Add Item to doc" />
-            <Label fx:id="kindOfActItemLabel" layoutX="13.0" layoutY="257.0" prefHeight="35.0" prefWidth="88.0" text="Направление:" textAlignment="CENTER" />
+            <Button fx:id="addItemToDocBtn" layoutX="16.0" layoutY="187.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="121.0" text="Add Item to doc" />
+            <Label fx:id="kindOfActItemLabel" layoutX="13.0" layoutY="221.0" prefHeight="35.0" prefWidth="88.0" text="Направление:" textAlignment="CENTER" />
             <TextField fx:id="nameOfDocumentTextField" layoutX="143.0" layoutY="18.0" prefHeight="26.0" prefWidth="639.0" promptText="Название" />
             <TextField fx:id="numberOfDocumentTextField" layoutX="125.0" layoutY="53.0" prefHeight="26.0" prefWidth="658.0" promptText="№ документа" />
-            <ListView fx:id="typeOfActivityListView" layoutX="114.0" layoutY="267.0" prefHeight="118.0" prefWidth="142.0" />
-            <Label fx:id="itemExecutorLabel" layoutX="13.0" layoutY="415.0" prefHeight="35.0" prefWidth="88.0" text="Исполнитель:" textAlignment="CENTER" />
-            <Label fx:id="itemAssistantLabel" layoutX="283.0" layoutY="406.0" prefHeight="35.0" prefWidth="88.0" text="Соисполнитель:" textAlignment="CENTER" />
-            <Label fx:id="dueDateLabel" layoutX="539.0" layoutY="267.0" prefHeight="35.0" prefWidth="107.0" text="Срок исполнения:" textAlignment="CENTER" />
-            <DatePicker fx:id="dueDatePicker" layoutX="650.0" layoutY="272.0" prefHeight="26.0" prefWidth="127.0" />
-            <ListView fx:id="executorsListView" layoutX="116.0" layoutY="415.0" prefHeight="147.0" prefWidth="142.0" />
-            <ListView fx:id="coexecutorsListView" layoutX="386.0" layoutY="414.0" prefHeight="147.0" prefWidth="142.0" />
-            <CheckBox fx:id="weeklyChekBox" layoutX="650.0" layoutY="347.0" mnemonicParsing="false" text="Weekly" />
-            <CheckBox fx:id="monthlyCheckBox" layoutX="650.0" layoutY="376.0" mnemonicParsing="false" text="Montly" />
-            <CheckBox fx:id="quarterlyCheckBox" layoutX="650.0" layoutY="406.0" mnemonicParsing="false" text="Quarterly" />
-            <Button fx:id="showTheDocButton" layoutX="185.0" layoutY="222.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="122.0" text="Show the doc" />
-            <TextArea fx:id="itemTextCurrentDocField" layoutX="15.0" layoutY="154.0" prefHeight="59.0" prefWidth="766.0" promptText="Содержание пункта" />
-            <CheckBox fx:id="dailyChekBox" layoutX="650.0" layoutY="320.0" mnemonicParsing="false" text="Daily" />
-            <Label fx:id="selectedExecutorsLabel" layoutX="15.0" layoutY="578.0" prefHeight="35.0" prefWidth="244.0" text="Исполнитель:" textAlignment="CENTER" />
-            <Label fx:id="selectedCoExecutorsLabel" layoutX="283.0" layoutY="578.0" prefHeight="35.0" prefWidth="244.0" text="Соисполнитель:" textAlignment="CENTER" />
-            <Label fx:id="DateOneLabel" layoutX="648.0" layoutY="432.0" prefHeight="35.0" prefWidth="127.0" text="Date 1" textAlignment="CENTER" />
-            <Label fx:id="DateTwoLabel" layoutX="648.0" layoutY="467.0" prefHeight="35.0" prefWidth="127.0" text="Date 2" textAlignment="CENTER" />
-            <Button fx:id="CleanDateBtnItemInDoc" layoutX="648.0" layoutY="502.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="127.0" text="Clean date" />
+            <ListView fx:id="typeOfActivityListView" layoutX="114.0" layoutY="231.0" minHeight="118.0" minWidth="300.0" prefHeight="118.0" prefWidth="300.0" />
+            <Label fx:id="itemExecutorLabel" layoutX="10.0" layoutY="415.0" prefHeight="35.0" prefWidth="88.0" text="Исполнитель:" textAlignment="CENTER" />
+            <Label fx:id="itemAssistantLabel" layoutX="252.0" layoutY="415.0" prefHeight="35.0" prefWidth="88.0" text="Соисполнитель:" textAlignment="CENTER" />
+            <Label fx:id="dueDateLabel" layoutX="509.0" layoutY="267.0" prefHeight="35.0" prefWidth="107.0" text="Срок исполнения:" textAlignment="CENTER" />
+            <DatePicker fx:id="dueDatePicker" layoutX="620.0" layoutY="272.0" prefHeight="26.0" prefWidth="127.0" />
+            <ListView fx:id="executorsListView" layoutX="106.0" layoutY="424.0" prefHeight="147.0" prefWidth="142.0" />
+            <ListView fx:id="coexecutorsListView" layoutX="350.0" layoutY="424.0" prefHeight="147.0" prefWidth="142.0" />
+            <CheckBox fx:id="weeklyChekBox" layoutX="578.0" layoutY="317.0" mnemonicParsing="false" text="Weekly" />
+            <CheckBox fx:id="monthlyCheckBox" layoutX="662.0" layoutY="317.0" mnemonicParsing="false" text="Montly" />
+            <CheckBox fx:id="quarterlyCheckBox" layoutX="509.0" layoutY="350.0" mnemonicParsing="false" text="Quarterly" />
+            <Button fx:id="showTheDocButton" layoutX="187.0" layoutY="187.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="122.0" text="Show the doc" />
+            <TextArea fx:id="itemTextCurrentDocField" layoutX="17.0" layoutY="119.0" prefHeight="59.0" prefWidth="766.0" promptText="Содержание пункта" />
+            <CheckBox fx:id="dailyChekBox" layoutX="509.0" layoutY="317.0" mnemonicParsing="false" text="Daily" />
+            <Label fx:id="selectedExecutorsLabel" layoutX="7.0" layoutY="571.0" prefHeight="35.0" prefWidth="244.0" text="Исполнитель:" textAlignment="CENTER" />
+            <Label fx:id="selectedCoExecutorsLabel" layoutX="254.0" layoutY="571.0" prefHeight="35.0" prefWidth="244.0" text="Соисполнитель:" textAlignment="CENTER" />
+            <Label fx:id="DateOneLabel" layoutX="514.0" layoutY="380.0" prefHeight="35.0" prefWidth="127.0" text="Date 1" textAlignment="CENTER" />
+            <Label fx:id="DateTwoLabel" layoutX="514.0" layoutY="415.0" prefHeight="35.0" prefWidth="127.0" text="Date 2" textAlignment="CENTER" />
+            <Button fx:id="CleanDateBtnItemInDoc" layoutX="598.0" layoutY="345.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="127.0" text="Clean date" />
+            <Label fx:id="subsectionComboBoxLabel" layoutX="13.0" layoutY="368.0" prefHeight="35.0" prefWidth="88.0" text="Подраздел:" textAlignment="CENTER" />
+            <ComboBox fx:id="subsectionComboBox" layoutX="114.0" layoutY="373.0" prefHeight="26.0" prefWidth="300.0" />
+            <Label fx:id="DateThreeLabel" layoutX="514.0" layoutY="450.0" prefHeight="35.0" prefWidth="127.0" text="Date 3" textAlignment="CENTER" />
+            <Label fx:id="DateFourLabel" layoutX="514.0" layoutY="485.0" prefHeight="35.0" prefWidth="127.0" text="Date 4" textAlignment="CENTER" />
+            <Label fx:id="DateFiveLabel" layoutX="514.0" layoutY="520.0" prefHeight="35.0" prefWidth="127.0" text="Date 5" textAlignment="CENTER" />
+            <Label fx:id="DateSixLabel" layoutX="658.0" layoutY="380.0" prefHeight="35.0" prefWidth="127.0" text="Date 6" textAlignment="CENTER" />
+            <Label fx:id="DateSevenLabel" layoutX="658.0" layoutY="415.0" prefHeight="35.0" prefWidth="127.0" text="Date 7" textAlignment="CENTER" />
+            <Label fx:id="DateEightLabel" layoutX="658.0" layoutY="450.0" prefHeight="35.0" prefWidth="127.0" text="Date 8" textAlignment="CENTER" />
+            <Label fx:id="DateNineLabel" layoutX="658.0" layoutY="485.0" prefHeight="35.0" prefWidth="127.0" text="Date 9" textAlignment="CENTER" />
+            <Label fx:id="DateTenLabel" layoutX="658.0" layoutY="520.0" prefHeight="35.0" prefWidth="127.0" text="Date 10" textAlignment="CENTER" />
       </children>
     </AnchorPane>
   </children>

@@ -43,6 +43,11 @@ public class StartMenuController {
             ActionWithWindow action = new ActionWithWindow();
             action.toShow("/com/example/planning/controlFormWindow.fxml", "Control", 500, 500);
         });
+        getReportButton.setOnAction(actionEvent -> {
+            ActionWithWindow action = new ActionWithWindow();
+            action.toShow("/com/example/planning/getReportWindows.fxml", "Report", 500, 200);
+        });
+
 
     }
 

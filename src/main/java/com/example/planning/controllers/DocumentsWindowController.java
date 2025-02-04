@@ -59,6 +59,14 @@ public class DocumentsWindowController {
                 nameDocBtn.setPrefSize(100, 50);
                 btnDocField.getChildren().add(nameDocBtn);
                 nameDocBtn.setOnMouseClicked(mouseEvent -> {
+
+                    // во время нажатия кнопки закрываем MS Excel
+                    try {
+                        Runtime.getRuntime().exec("cmd /c taskkill /f /im excel.exe");
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+
                     AddItemInDocumentController.nameOfDoc = nameDocBtn.getText();
                     ActionWithWindow action = new ActionWithWindow();
                     action.toShow("/com/example/planning/fillingOutOfDocumentFormWindow.fxml", nameDocBtn.getText(), 800, 700);
